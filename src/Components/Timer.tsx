@@ -3,10 +3,11 @@ import React, { useEffect, useState } from 'react'
 type TimerProps = {
   value: string
   canStart: boolean
+  onFinish: () => void
 }
 
-const Timer: React.FC<TimerProps> = ({ value, canStart }) => {
-  const [seconds, setSeconds] = useState<number>(3)
+const Timer: React.FC<TimerProps> = ({ canStart, onFinish }) => {
+  const [seconds, setSeconds] = useState(3)
 
   useEffect(() => {
     if (!canStart) return
@@ -17,6 +18,7 @@ const Timer: React.FC<TimerProps> = ({ value, canStart }) => {
       setSeconds(prev => {
         if (prev <= 1) {
           clearInterval(interval)
+          onFinish()
           return 0
         }
         return prev - 1
@@ -26,11 +28,7 @@ const Timer: React.FC<TimerProps> = ({ value, canStart }) => {
     return () => clearInterval(interval)
   }, [canStart])
 
-  return (
-    <div className='timer'>
-      {canStart ? seconds : null}
-    </div>
-  )
+  return <div className='timer'>{canStart ? seconds : null}</div>
 }
 
 export default Timer
